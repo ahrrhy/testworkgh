@@ -36,6 +36,7 @@ get_header(); ?>
 
 		endwhile; // End of the loop.
 		?>
+            <p>trying git</p>
 
 		</main><!-- #main -->
 	</div><!-- #primary -->
