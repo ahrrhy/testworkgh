@@ -16,7 +16,17 @@ get_header(); ?>
 		while ( have_posts() ) : the_post();
 
 			get_template_part( 'template-parts/content', get_post_format() );
-            the_meta();
+
+                // Get the video URL and put it in the $video variable
+                $videoID = get_post_meta($post->ID, 'video_url', true);
+                // Check if there is in fact a video URL
+                if ($videoID) {
+                    echo '<div class="videoContainer">';
+                    // Echo the embed code via oEmbed
+                    echo wp_oembed_get( $videoID );
+                    echo '</div>';
+                }
+
 			the_post_navigation();
 
 			// If comments are open or we have at least one comment, load up the comment template.
