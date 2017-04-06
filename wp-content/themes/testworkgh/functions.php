@@ -35,11 +35,29 @@ function testworkgh_setup() {
 	 */
 	add_theme_support( 'title-tag' );
 
-	/*
-	 * Enable support for Post Thumbnails on posts and pages.
-	 *
-	 * @link https://developer.wordpress.org/themes/functionality/featured-images-post-thumbnails/
-	 */
+    /**
+     *  Adding post format support
+     */
+    add_theme_support( 'post-formats', array('aside', 'gallery', 'link'));
+
+
+    /**
+     *  Adding active class to Navigation
+     */
+
+    add_filter('nav_menu_css_class' , 'special_nav_class' , 10 , 2);
+
+    function special_nav_class ($classes, $item) {
+        if (in_array('current-menu-item', $classes) ){
+            $classes[] = 'active ';
+        }
+        return $classes;
+    }
+    /*
+     * Enable support for Post Thumbnails on posts and pages.
+     *
+     * @link https://developer.wordpress.org/themes/functionality/featured-images-post-thumbnails/
+     */
 	add_theme_support( 'post-thumbnails' );
 
 	// This theme uses wp_nav_menu() in one location.
@@ -114,6 +132,21 @@ function testworkgh_scripts() {
 	if ( is_singular() && comments_open() && get_option( 'thread_comments' ) ) {
 		wp_enqueue_script( 'comment-reply' );
 	}
+
+	/**
+     * Adding my scripts
+     */
+
+    // my scripts
+    wp_enqueue_script('jq-js', get_template_directory_uri().'/libs/jquery/dist/jquery.min.js');
+    wp_enqueue_script('bootstrap-js', get_template_directory_uri().'/libs/bootstrap/dist/js/bootstrap.min.js');
+    wp_enqueue_style('bootstrap-css', get_template_directory_uri().'/libs/bootstrap/dist/css/bootstrap.min.css');
+    wp_enqueue_style('bootstrap-themes-css', get_template_directory_uri().'/libs/bootstrap/dist/css/bootstrap-theme.min.css');
+
+    wp_enqueue_style('my-style', get_template_directory_uri().'/stylesheets/style.css', 'true');
+    wp_enqueue_script('main', get_template_directory_uri().'/js/main.js');
+    // .my scripts
+
 }
 add_action( 'wp_enqueue_scripts', 'testworkgh_scripts' );
 
