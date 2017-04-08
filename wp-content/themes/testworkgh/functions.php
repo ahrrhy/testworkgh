@@ -86,6 +86,29 @@ function testworkgh_setup() {
 	// Add theme support for selective refresh for widgets.
 	add_theme_support( 'customize-selective-refresh-widgets' );
 }
+    /**
+     * my scripts
+     */
+// Disable jQuery WordPress
+    function jquery_another_version() {
+        wp_deregister_script( 'jquery' );
+        wp_register_script( 'jquery', get_stylesheet_directory_uri() .'/libs/jquery/dist/jquery.min.js', array(), '');
+    }
+    add_action( 'wp_enqueue_scripts', 'jquery_another_version' );
+
+    /**
+     *  Adding font awesome
+     */
+    function font_awesome() {
+        if (!is_admin()) {
+            wp_register_style('font-awesome', 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css');
+            wp_enqueue_style('font-awesome');
+        }
+    }
+    add_action('wp_enqueue_scripts', 'font_awesome');
+
+// .my scripts
+
 endif;
 add_action( 'after_setup_theme', 'testworkgh_setup' );
 
@@ -143,7 +166,8 @@ function testworkgh_scripts() {
     wp_enqueue_style('bootstrap-css', get_template_directory_uri().'/libs/bootstrap/dist/css/bootstrap.min.css');
     wp_enqueue_style('bootstrap-themes-css', get_template_directory_uri().'/libs/bootstrap/dist/css/bootstrap-theme.min.css');
 
-    wp_enqueue_style('my-style', get_template_directory_uri().'/stylesheets/style.css', 'true');
+
+    wp_enqueue_style('my-style', get_template_directory_uri().'/stylesheets/style.css', true);
     wp_enqueue_script('main', get_template_directory_uri().'/js/main.js');
     // .my scripts
 
@@ -174,3 +198,80 @@ require get_template_directory() . '/inc/customizer.php';
  * Load Jetpack compatibility file.
  */
 require get_template_directory() . '/inc/jetpack.php';
+
+/**
+ * Load Social Icons file.
+ */
+require get_template_directory() . '/inc/social-icons.php';
+
+
+/**
+ * Add custom post type and taxonomy
+ */
+require get_template_directory() . '/inc/offers.php';
+/**
+ * Add custom post type and taxonomy
+ */
+require get_template_directory() . '/inc/portfolio.php';
+
+
+
+function testworkgh_why_us_widgets_init() {
+    register_sidebar( array(
+        'name'          => esc_html__( 'Why Us', 'testworkgh' ),
+        'id'            => 'why_us',
+        'description'   => esc_html__( 'Add widgets here.', 'testworkgh' ),
+        'before_widget' => '<div id="%1$s" class="col-sm-6 col-sm-push-1 widget %2$s">',
+        'after_widget'  => '</div>',
+        'before_title'  => '<h2 class="widget-title">',
+        'after_title'   => '</h2>',
+    ) );
+}
+add_action( 'widgets_init', 'testworkgh_why_us_widgets_init' );
+
+function testworkgh_welcome_widgets_init() {
+    register_sidebar( array(
+        'name'          => esc_html__( 'Welcome', 'testworkgh' ),
+        'id'            => 'welcome',
+        'description'   => esc_html__( 'Add widgets here.', 'testworkgh' ),
+        'before_widget' => '<div id="%1$s" class="col-sm-6 col-sm-push-1 widget %2$s">',
+        'after_widget'  => '</div>',
+        'before_title'  => '<h2 class="widget-title">',
+        'after_title'   => '</h2>',
+    ) );
+}
+add_action( 'widgets_init', 'testworkgh_welcome_widgets_init' );
+
+function testworkgh_footer_contact_form_widgets_init() {
+    register_sidebar( array(
+        'name'          => esc_html__( 'Footer Contact Us', 'testworkgh' ),
+        'id'            => 'footer-contact-us',
+        'description'   => esc_html__( 'Add widgets here.', 'testworkgh' ),
+        'before_widget' => '<div id="%1$s" class="col-sm-6 footer-contact-us widget %2$s">',
+        'after_widget'  => '</div>',
+        'before_title'  => '<h2 class="widget-title">',
+        'after_title'   => '</h2>',
+    ) );
+}
+add_action( 'widgets_init', 'testworkgh_footer_contact_form_widgets_init' );
+
+function my_pagenavi() {
+    global $wp_query;
+    $big = 999999999; // уникальное число для замены
+    $args = array(
+        'base'    => str_replace( $big, '%#%', get_pagenum_link( $big ) ),
+        'format'  => '',
+        'current' => max( 1, get_query_var('paged') ),
+        'total'   => $wp_query->max_num_pages,
+        'type' => 'list',
+        'prev_text' => 'Prev',
+        'next_text' => 'Next',
+        'end_size' => 1,
+        'mid_size' => 2
+    );
+    $result = paginate_links( $args );
+    // удаляем добавку к пагинации для первой страницы
+    $result = str_replace( '/page/1/', '', $result );
+
+    echo $result;
+}
